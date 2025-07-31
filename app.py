@@ -49,8 +49,9 @@ if uploaded_file:
     st.write(f_minus)
 
     # Step 3: Compute S and R
-    S = ((weights * (f_star - norm) / (f_star - f_minus + 1e-9)).sum(axis=1))
-    R = ((weights * (f_star - norm) / (f_star - f_minus + 1e-9)).max(axis=1))
+    weights_series = pd.Series(weights, index=norm.columns)
+    S = ((weights_series * (f_star - norm) / (f_star - f_minus + 1e-9)).sum(axis=1))
+    R = ((weights_series * (f_star - norm) / (f_star - f_minus + 1e-9)).max(axis=1))
 
     # Step 4: Compute Q index
     v = 0.5  # Strategy weight
