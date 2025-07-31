@@ -1,4 +1,3 @@
-
 # app.py
 
 import streamlit as st
@@ -22,25 +21,34 @@ if uploaded_file:
     criteria_df = df.iloc[:, 1:].copy()
     alternatives = df.iloc[:, 0].values
 
-    # Step 1: Normalize the matrix
+    # Step 1: Normalize the decision matrix
+    st.markdown("### Step 1: Normalize the Decision Matrix")
     norm_df = (criteria_df - criteria_df.min()) / (criteria_df.max() - criteria_df.min())
+    st.dataframe(norm_df)
 
     # Step 2: Determine best and worst values
+    st.markdown("### Step 2: Determine Best and Worst Values")
     f_star = norm_df.max()
     f_minus = norm_df.min()
+    st.write("Best values (f*):", f_star)
+    st.write("Worst values (f-):", f_minus)
 
-    # Step 3: Compute S, R
+    # Step 3: Compute S and R
+    st.markdown("### Step 3: Compute Group Utility (S) and Individual Regret (R)")
     S = ((f_star - norm_df) / (f_star - f_minus)).sum(axis=1)
     R = ((f_star - norm_df) / (f_star - f_minus)).max(axis=1)
+    st.write("S values:", S)
+    st.write("R values:", R)
 
-    # Step 4: Compute Q
-    v = 0.5  # weight for strategy of majority
+    # Step 4: Compute Q (VIKOR index)
+    st.markdown("### Step 4: Compute Compromise Index (Q)")
+    v = 0.5  # Weighting factor
     S_star, S_minus = S.min(), S.max()
     R_star, R_minus = R.min(), R.max()
-
     Q = v * (S - S_star) / (S_minus - S_star) + (1 - v) * (R - R_star) / (R_minus - R_star)
+    st.write("Q values:", Q)
 
-    # Combine results
+    # Result
     result_df = pd.DataFrame({
         'Alternative': alternatives,
         'S': S,
@@ -52,7 +60,6 @@ if uploaded_file:
 
     st.subheader("📈 VIKOR Ranking Result")
     st.dataframe(result_df)
-
     st.success(f"🏆 Best choice: **{result_df.iloc[0]['Alternative']}**")
 
 else:
