@@ -26,8 +26,10 @@ if uploaded_file:
     cost_criteria = ['PE', 'PTBV']
 
     # Equal weights
-    weights = np.ones(len(criteria.columns)) / len(criteria.columns)
-
+    weights_series = pd.Series(
+    data=np.ones(len(norm.columns)) / len(norm.columns),
+    index=norm.columns
+    )
     # Step 1: Normalize Decision Matrix
     norm = pd.DataFrame()
     for col in criteria.columns:
