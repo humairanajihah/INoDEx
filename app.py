@@ -1,23 +1,22 @@
 import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
 
-st.markdown("### 📈 VIKOR Q Value Chart")
+# Sample stock data
+data = {
+    "Stock": ["BSLCORP", "FPGROUP", "GTRONIC", "JHM", "KESM", "MPI", "SJC", "TONGHER", "UWC", "YBS", "YTL", "YPSAH"],
+    "Q": [0.35, 0.27, 0.43, 0.39, 0.55, 0.60, 0.33, 0.29, 0.25, 0.48, 0.52, 0.31]  # Replace with your actual Q values
+}
 
-# Plotting the Q values
-fig, ax = plt.subplots(figsize=(10, 5))
-bars = ax.bar(result_df["Alternative"], result_df["Q"], color="skyblue")
-ax.set_title("VIKOR Compromise Index (Q) by Alternative")
-ax.set_ylabel("Q Value")
-ax.set_xlabel("Alternative")
-ax.grid(axis='y', linestyle='--', alpha=0.7)
+df = pd.DataFrame(data)
+df = df.sort_values("Q")  # Lower Q is better
 
-# Highlight best (min Q) in green
-best_index = result_df["Q"].idxmin()
-bars[best_index].set_color('green')
-
-# Add text on bars
-for bar in bars:
-    height = bar.get_height()
-    ax.text(bar.get_x() + bar.get_width()/2., height + 0.01,
-            f'{height:.2f}', ha='center', va='bottom', fontsize=8)
-
-st.pyplot(fig)
+# Plotting
+plt.figure(figsize=(10, 6))
+plt.barh(df["Stock"], df["Q"], color="skyblue")
+plt.xlabel("Q Value (Lower is Better)")
+plt.title("VIKOR Ranking of Stocks")
+plt.gca().invert_yaxis()  # Best stock on top
+plt.grid(axis='x', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
